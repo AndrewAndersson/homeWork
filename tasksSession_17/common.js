@@ -5,9 +5,8 @@
 
 let goods = ['foods', 'fruits', 'technics', 'phones', 'computers'];
 
-goods.splice(2, 1);
-goods = goods.join(', ');
-console.log(goods);
+goods.splice(goods.indexOf('technics'), 1);
+console.log(`"${goods.join(', ')}"`);
 
 // //////////////////////////////////
 // 2. Преобразовать текущую дату и время в понятный человеку формат:
@@ -44,15 +43,13 @@ console.log(getExt('/home/user/project/script.js'));
 
 let arr = [1, 2, 2, 4, 5, 4, 7, 8, 7, 3, 6];
 
-function filterArr(arr) {
-    let outArr = [];
-    let cach = '';
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i - 1] == arr[i]) continue;
-        cach += arr[i] + ',';
-    }
-    return () => outArr = cach.slice(0, -1).split(',');
+function filterArr(array) {
+    return array.reduce((a, b) => {
+        if (!a.includes(b)) {
+            a.push(b);
+        }
+        return a;
+    }, []);
 }
 
-let setArr = filterArr(arr);
-console.log(setArr());
+console.log(filterArr(arr));
