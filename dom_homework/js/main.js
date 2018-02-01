@@ -8,6 +8,10 @@
     let selectorBox = document.getElementById('type-selector'),
         slectAmount = document.getElementById('line-selector');
 
+    let firstTitleGroup = document.querySelector('.first-group'),
+        seocndTitleGroup = document.querySelector('.second-group'),
+        thirdTitleGroup = document.querySelector('.third-group');
+
     function getData() {
         let newArr = [];
         data.forEach((item) => {
@@ -25,85 +29,55 @@
         return `${item.name.charAt(0).toUpperCase()}${item.name.substr(1).toLowerCase()}`;
     }
 
+    function getUrl(item) {
+        if (item.url.substr(0, 7) === 'http://') {
+            return item.url;
+        } else return `http://${item.url}`;
+    }
+
+    function getDescription(item) {
+        if (item.description.length < 15) {
+            return item.description;
+        } else return `${item.description.substring(0, 15)}...`;
+    }
+
     function getDate(item) {
         return moment(item.date).format('YYYY/MM/DD, HH:mm');
     }
 
     function setData(arr) {
-        data = arr.map((item) => {
+        return arr.map((item) => {
             return {
                 name: getName(item),
-                url: item.url, // немогу понять мочему, когда я записую `http://${item.url}` в html коде  в <img src=""/>при втором вызове функции дублируеться http:// и при каждом появляеться плюс одна запись http://
-                description: `${item.description.substring(0, 15)}...`,
+                url: getUrl(item),
+                description: getDescription(item),
                 date: getDate(item)
             };
         });
-        return data;
     }
 
-    function getFirstBlock(arr, container) {
-        let newArr = arr.map((item) => {
-            let resultHTML = container
-                .replace(/\$name/gi, item.name)
-                .replace("$url", item.url)
-                .replace("$description", item.description)
-                .replace("$date", item.date);
-            return resultHTML;
-        })
-        return newArr.join('');
+    function showHideContent(...elements) {
+        return elements.map((item, index) => {
+            if (index === 0) {
+                return item.classList.add("show");
+            } else return item.classList.remove("show");
+        }).join('');
     }
 
-    function getSecondBlock(arr) {
-        let newArr = arr.map((item) => {
-            let secondItemTemplate = `<div class="col-sm-3 col-xs-6">\
-        <img src="http://${item.url}" alt="${item.name}" class="img-thumbnail">\
-        <div class="info-wrapper">\
-            <div class="text-muted">${item.name}</div>\
-            <div class="text-muted top-padding">${item.description}</div>\
-            <div class="text-muted">${item.date}</div>\
-        </div>\
-        </div>`;
-            return secondItemTemplate;
-        })
-        return newArr.join('');
-    }
-
-    function getThirdBlock(arr) {
-        // let newArr = arr.map((item) => {
-        //     let div = document.createElement('div')
-        //         .className = "col-sm-3 col-xs-6";
-
-        //     return div.innerHTML = "";
-        // })
-        // return newArr;
-    }
-
-    function selectMethod(data, data2, data3) {
+    function selectMethod(data) {
         if (selectorBox.value == 1) {
-            removeChildren(secondBlock);
-            removeChildren(thirdBlock);
-            document.querySelector('.first-group').classList.add("show");
-            document.querySelector('.second-group').classList.remove("show");
-            document.querySelector('.third-group').classList.remove("show");
-            firstBlock.innerHTML = data;
+            showHideContent(firstTitleGroup, seocndTitleGroup, thirdTitleGroup);
+            getFirstBlock(data);
         } else if (selectorBox.value == 2) {
-            removeChildren(firstBlock);
-            removeChildren(thirdBlock);
-            document.querySelector('.second-group').classList.add("show");
-            document.querySelector('.first-group').classList.remove("show");
-            document.querySelector('.third-group').classList.remove("show");
-            secondBlock.innerHTML = data2;
+            showHideContent(seocndTitleGroup, firstTitleGroup, thirdTitleGroup);
+            getSecondBlock(data);
         } else if (selectorBox.value == 3) {
-            removeChildren(firstBlock);
-            removeChildren(secondBlock);
-            document.querySelector('.third-group').classList.add("show");
-            document.querySelector('.second-group').classList.remove("show");
-            document.querySelector('.first-group').classList.remove("show");
-            thirdBlock.innerHTML = data3;
+            showHideContent(thirdTitleGroup, seocndTitleGroup, firstTitleGroup);
+            getThirdBlock(data);
         }
     }
 
-    function sliceArr(arr) {
+    function selectionNumberOfElements(arr) {
         let newArr = [];
         if (slectAmount.value == 1) {
             return newArr = arr.slice(0, 3);
@@ -112,32 +86,80 @@
         } else return arr;
     }
 
-    function removeChildren(elem) {
-        while (elem.lastChild) {
-            elem.removeChild(elem.lastChild);
-        }
+    function getFirstBlock(arr) {
+        firstBlock.innerHTML = arr.map((item) => {
+            let resultHTML = setReplaceItemTemplate()
+                .replace(/\$name/gi, item.name)
+                .replace("$url", item.url)
+                .replace("$description", item.description)
+                .replace("$date", item.date);
+            return resultHTML;
+        }).join('');
     }
 
+    function setReplaceItemTemplate() {
+        let replaceItemTemplate = '<div class="col-sm-3 col-xs-6">\
+        <img src="$url" alt="$name" class="img-thumbnail">\
+        <div class="info-wrapper">\
+        <div class="text-muted">$name</div>\
+        <div class="text-muted top-padding">$description</div>\
+        <div class="text-muted">$date</div>\
+        </div>\
+        </div>';
+        return replaceItemTemplate;
+    }
+
+    function getSecondBlock(arr) {
+        secondBlock.innerHTML = arr.map((item) => {
+            let secondItemTemplate = `<div class="col-sm-3 col-xs-6">\
+        <img src="${item.url}" alt="${item.name}" class="img-thumbnail">\
+        <div class="info-wrapper">\
+            <div class="text-muted">${item.name}</div>\
+            <div class="text-muted top-padding">${item.description}</div>\
+            <div class="text-muted">${item.date}</div>\
+        </div>\
+        </div>`;
+            return secondItemTemplate;
+        }).join('');
+    }
+
+    function getThirdBlock(arr) {
+        return arr.forEach((item) => {
+            let div = document.createElement('div'),
+                infoWrapper = document.createElement('div');
+            let image = document.createElement('img');
+            div.className = "col-sm-3 col-xs-6";
+            infoWrapper.className = "info-wrapper";
+            image.className = "img-thumbnail";
+            image.setAttribute("alt", item.name);
+            image.setAttribute("src", item.url);
+
+            infoWrapper.innerHTML = '<div class="text-muted">' + item.name + '</div>\
+                                    <div class="text-muted top-padding">' + item.description + '</div>\
+                                    <div class="text-muted">' + item.date + '</div>';
+
+            div.appendChild(image);
+            div.appendChild(infoWrapper);
+
+            thirdBlock.appendChild(div);
+        })
+    }
+
+    // function removeChildren(elem) {
+    //     while (elem.lastChild) {
+    //         elem.removeChild(elem.lastChild);
+    //     }
+    // }
+
     function init() {
+
         let newData = getData();
         newData = setData(newData);
-        let slicedArr = sliceArr(newData);
+        let selectableNumberOfElements = selectionNumberOfElements(newData);
 
-        var replaceItemTemplate = '<div class="col-sm-3 col-xs-6">\
-    <img src="http://$url" alt="$name" class="img-thumbnail">\
-    <div class="info-wrapper">\
-    <div class="text-muted">$name</div>\
-    <div class="text-muted top-padding">$description</div>\
-    <div class="text-muted">$date</div>\
-    </div>\
-    </div>';
-        let firstData = getFirstBlock(slicedArr, replaceItemTemplate);
-        let secondData = getSecondBlock(slicedArr);
-        let thirdData = getThirdBlock(slicedArr);
-
-        selectMethod(firstData, secondData, thirdData);
+        selectMethod(selectableNumberOfElements);
     }
 
     btn.addEventListener("click", init);
 
-})()
+})();
