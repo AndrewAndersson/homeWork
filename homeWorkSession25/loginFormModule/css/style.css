@@ -81,14 +81,14 @@ body {
 
 .form-signin input[type="email"] {
     margin-bottom: -1px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
 }
 
 .form-signin input[type="password"] {
     margin-bottom: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .form-control,
@@ -129,19 +129,50 @@ body {
 }
 
 #otputPassword {
-    width: 70%;
+    width: 60%;
     border-radius: 5px 0 0 5px;
     display: inline-block;
 }
 
 #btnHideShow,
 #btnHide {
-    width: 30%;
+    width: 40%;
     float: right;
     margin-top: 5px;
     height: 38px;
     border-radius: 0 5px 5px 0;
     line-height: 1;
+}
+
+@media screen and (max-width:1110px) {
+    #btnHideShow,
+    #btnHide {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width:940px) {
+    #btnHideShow,
+    #btnHide {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width:840px) {
+    #btnHideShow,
+    #btnHide {
+        font-size: 10px;
+    }
+}
+
+@media screen and (max-width:640px) {
+    #otputPassword {
+        width: 50%;
+    }
+    #btnHideShow,
+    #btnHide {
+        width: 50%;
+    }
 }
 
 

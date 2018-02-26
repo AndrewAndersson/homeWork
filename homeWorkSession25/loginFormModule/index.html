@@ -33,7 +33,7 @@
 
             <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
             <label for="inputEmail" class="sr-only">Email address</label>
-            <input type="text" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" autocomplete="off">
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" autocomplete="off">
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" autocomplete="off">
             <div class="checkbox mb-3 hide">
@@ -41,11 +41,27 @@
                     <input type="checkbox" value="remember-me"> Remember me
                 </label>
             </div>
-            <button id="btn" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <button id="btn" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
             <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
         </form>
 
-        <div class="contant"></div>
+        <div class="contant hide">
+            <div class="control-panel">
+                <h1 class="h3 font-weight-normal control-panel__title">Информация о пользователе</h1>
+                <div class="fields-input">
+                    <div class="item">
+                        <p class="input-title">Логин</p>
+                        <input type="text" id="otputEmail" class="form-control" placeholder="Email address" required="" autofocus="" autocomplete="off">
+                    </div>
+                    <div class="item">
+                        <p class="input-title">Пароль</p>
+                        <input type="text" id="otputPassword" class="form-control" placeholder="Password" required="" autocomplete="off">
+                        <button id="btnHide" class="btn btn-lg btn-primary btn-block" type="button">Показать пароль</button>
+                    </div>
+                </div>
+                <button id="btnComeBack" class="btn btn-lg btn-primary btn-block" type="button">Вернуться назад</button>
+            </div>
+        </div>
 
     </main>
 
