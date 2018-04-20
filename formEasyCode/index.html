@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row log-in">
+            <div class="log-in__title col-md-12">
+                <h1>Log in to the site</h1>
+            </div>
+            <form action="" class="log-in__form col-md-12">
+                <div class="alert alert-danger log-in__alert hide" role="alert">
+
+                </div>
+                <div class="form-group input__stile">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control log-in__form_email" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group input__stile">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control log-in__form_password" placeholder="Password">
+                </div>
+                <button type="button" class="btn btn-primary log-in__btn btn__style">Log in</button>
+            </form>
+            <div class="log-in__bottom">
+                <h2 class="log-in__bottom_title">Dont have an account yet?</h2>
+                <a href="#" class="to-sign-in">Sign in</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row sign-in">
+            <div class="sign-in__title col-md-12">
+                <h1>Sign in to the site</h1>
+            </div>
+            <form action="" class="sign-in__form col-md-12">
+                <div class="alert alert-danger sign-in__alert hide" role="alert">
+
+                </div>
+                <div class="form-group input__stile">
+                    <label for="exampleInputEmail1">Name</label>
+                    <input type="text" class="form-control" aria-describedby="nameHelp" placeholder="Enter name">
+                </div>
+                <div class="form-group input__stile">
+                    <label for="exampleInputEmail1">Email address</label>
+                    <input type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
+                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                </div>
+                <div class="form-group input__stile">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" placeholder="Password">
+                </div>
+                <div class="form-group input__stile">
+                    <label for="exampleInputPassword1">Confirm password</label>
+                    <input type="password" class="form-control" placeholder="Confirm password">
+                </div>
+                <button type="button" class="btn btn-primary sign-in__btn btn__style">Sign in</button>
+            </form>
+            <div class="log-in__bottom">
+                <h2 class="log-in__bottom_title">Back to?</h2>
+                <a href="#" class="to-log-in">Log in</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row user-name hide"></div>
+    </div>
+
+
+    <script src="./js/main.js"></script>
+</body>
+
+</html>

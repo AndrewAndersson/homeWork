@@ -1,0 +1,85 @@
+.hide {
+    display: none !important;
+}
+
+.show {
+    display: block !important;
+}
+
+.log-in,
+.sign-in {
+    background: #f3f3f3;
+}
+
+.log-in__title,
+.sign-in__title {
+    background: #ffffff;
+    border-top: 5px solid #e62b1e;
+    height: 90px;
+    font-size: 30px;
+    text-align: center;
+    padding-top: 15px;
+}
+
+.log-in__form,
+.sign-in__form {
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.input__stile {
+    width: 60%;
+}
+
+.btn__style {
+    background-color: #252525 !important;
+    margin: 0 auto !important;
+    border: none !important;
+    width: 60%;
+}
+
+.btn__style:hover {
+    background-color: #dd5342 !important;
+    transition: all, 1.5s;
+}
+
+.log-in__bottom,
+.sign-in__bottom {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.log-in__bottom_title,
+.to-sign-in,
+.to-log-in {
+    font-size: 18px;
+    color: #666666
+}
+
+.to-sign-in,
+.to-log-in {
+    text-decoration: underline;
+    color: #000000;
+    margin-left: 10px;
+}
+
+.to-sign-in:hover {
+    color: #dd5342;
+    transition: all, .5s;
+}
+
+.to-log-in:hover {
+    color: #dd5342;
+    transition: all, .5s;
+}
+
+.log-in__alert,
+.sign-in__alert {
+    width: 85%;
+    padding-top: 20px !important;
+}
