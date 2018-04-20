@@ -83,3 +83,26 @@
     width: 85%;
     padding-top: 20px !important;
 }
+
+.tasks__item {
+    list-style-type: none;
+}
+
+.tasks__item p {
+    margin: 0;
+    padding: 0;
+}
+
+.user-title {
+    width: 100%;
+    text-align: center;
+}
+
+.log-out {
+    background: #c4c4c4;
+    width: 100%;
+}
+
+.back-btn {
+    margin: 5px;
+}

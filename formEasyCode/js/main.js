@@ -11,11 +11,18 @@ class BasicList {
         this.fields = document.querySelectorAll('.form-control');
 
         this.signForm = document.querySelector('.sign-in');
+        this.signInName = document.querySelector('.sign-in__form_name');
+        this.signInEmail = document.querySelector('.sign-in__form_email');
+        this.signInPassword = document.querySelector('.sign-in__form_password');
+        this.signInConfirmPassword = document.querySelector('.sign-in__form_confirm-password');
         this.signInBtn = document.querySelector('.sign-in__btn');
 
         this.signAlert = document.querySelector('.sign-in__alert');
 
         this.userName = document.querySelector('.user-name');
+        this.logOut = document.querySelector('.log-out');
+
+        this.backBtn = document.querySelector('.back-btn');
     }
 
     setLocation(local = location.href) {
@@ -68,58 +75,6 @@ class BasicList {
         return fieldEmpty;
     }
 
-    initSignInForm() {
-        this.signInBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            this.isFieldsEmpty();
-        })
-    }
-    getSignForm() {
-        this.toSignInBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            location.reload();
-            this.setLocation('#signIn');
-        })
-        this.toLogInBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            location.reload();
-            this.setLocation('#logIn');
-        })
-    }
-    initComponents() {
-        this.initSignInForm();
-        this.getSignForm();
-        this.setLocation();
-    }
-
-}
-
-let basicList = new BasicList();
-basicList.initComponents();
-
-class LogInForm extends BasicList {
-    constructor() {
-        super();
-    }
-
-    isLoginCorrect(val) {
-        let regExp = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/;
-        let isValid = false;
-        val && (!regExp.test(this.logInEmail.value) ? this.getAlertMessage('not correct email address!', this.logAlert) : isValid = true);
-        return isValid;
-    }
-    isPasswordCorrect(val1, val2) {
-        let regExp = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
-        let isValid = false;
-        val1 && val2 && (!regExp.test(this.logInPassword.value) ? this.getAlertMessage('not correct pass', this.logAlert) : isValid = true);
-        return isValid;
-    }
-    getLogAndPass(val) {
-        return val && {
-            email: this.logInEmail.value,
-            password: this.logInPassword.value
-        }
-    }
     getUserName(data) {
         const url = 'https://easycode-test-auth-server.herokuapp.com/verify';
         const json = JSON.stringify({
@@ -133,16 +88,17 @@ class LogInForm extends BasicList {
             const response = xhr.responseText;
             if (xhr.readyState == 4 && xhr.status == "200") {
                 this.setLocation('#home');
+                this.logOut.classList.remove('hide');
                 this.userName.classList.remove('hide');
-                this.userName.innerHTML = `<h2>User Name: ${response}</h2>`;
+                this.userName.innerHTML += `<h2 class="user-title">User Name: ${response}</h2>`;
+                this.getTasks();
             } else {
                 this.getAlertMessage(response, this.logAlert)
             }
         };
         xhr.send(json);
     }
-    sendLogin(data) {
-        const url = 'https://easycode-test-auth-server.herokuapp.com/login';
+    sendLogin(data, url) {
         const json = JSON.stringify(data);
 
         const xhr = new XMLHttpRequest();
@@ -151,23 +107,125 @@ class LogInForm extends BasicList {
         xhr.onload = () => {
             const response = xhr.responseText;
             if (xhr.readyState == 4 && xhr.status == "200") {
-                this.getUserName(response)
+                this.getUserName(response);
+                localStorage.setItem('auth', response);
             } else {
                 this.getAlertMessage(response, this.logAlert)
             }
         };
         xhr.send(json);
     }
+
+    getDate(item) {
+        return moment(item).format('YYYY/MM/DD, HH:mm');
+    }
+
+    getTasksOnPage(data) {
+        this.userName.innerHTML += data.map(item => {
+            let tasks = `<div class="col-md-12"><ul>
+                            <li class="tasks__item">
+                                <p>ID: ${item._id}</p>
+                                <p>Title: ${item.title}</p>
+                                <p>Description: ${item.description}</p>
+                                <p>Date: ${this.getDate(item.date)}</p>
+                            </li>
+                        </div></ul>`;
+            return tasks;
+        }).join('');
+    }
+
+    getTasks() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'https://easycode-test-auth-server.herokuapp.com/tasks', true);
+
+        xhr.onload = () => {
+            if (xhr.readyState === 4 && +xhr.status === 200) {
+                this.getTasksOnPage(JSON.parse(xhr.responseText));
+            }
+        };
+
+        xhr.onerror = function() {
+            console.log('Error!');
+        };
+
+        xhr.send();
+    }
+
     isSend(passCorrect) {
+        const url = 'https://easycode-test-auth-server.herokuapp.com/login';
         if (this.getLogAndPass(passCorrect) != false) {
-            this.sendLogin(this.getLogAndPass(passCorrect));
+            this.sendLogin(this.getLogAndPass(passCorrect), url);
+        }
+    }
+
+    getAuth() {
+        let auth = localStorage.getItem('auth');
+        ((auth === null) ? this.setLocation('#logIn') : this.getUserName(auth));
+    }
+
+    getSignForm() {
+        this.toSignInBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            //location.reload();
+            this.setLocation('#signIn');
+        })
+        this.toLogInBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            //location.reload();
+            this.setLocation('#logIn');
+        })
+    }
+
+    getStartPage() {
+        this.backBtn.addEventListener('click', () => {
+            this.logOut.classList.add('hide');
+            this.userName.classList.add('hide');
+            localStorage.clear();
+            this.setLocation('#logIn');
+        })
+
+    }
+
+    initComponents() {
+        this.getStartPage();
+        this.getSignForm();
+        this.getAuth();
+    }
+
+}
+
+let basicList = new BasicList();
+basicList.initComponents();
+
+class LogInForm extends BasicList {
+    constructor() {
+        super();
+    }
+
+    isLoginCorrect(val, loginValue, alertLoc) {
+        let regExp = /^([a-z0-9_-]+\.)*[a-z0-9_-]+@[a-z0-9_-]+(\.[a-z0-9_-]+)*\.[a-z]{2,6}$/;
+        let isValid = false;
+        val && (!regExp.test(loginValue) ? this.getAlertMessage('not correct email address!', alertLoc) : isValid = true);
+        return isValid;
+    }
+    isPasswordCorrect(val1, val2, passwordValue, alertLoc) {
+        let regExp = /(?=^.{8,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
+        let isValid = false;
+        val1 && val2 && (!regExp.test(passwordValue) ? this.getAlertMessage('not correct pass', alertLoc) : isValid = true);
+        return isValid;
+    }
+
+    getLogAndPass(val) {
+        return val && {
+            email: this.logInEmail.value,
+            password: this.logInPassword.value
         }
     }
 
     initLogInForm() {
         this.logInBtn.addEventListener('click', (event) => {
             event.preventDefault();
-            let passCorrect = this.isPasswordCorrect(this.isFieldsEmpty(), this.isLoginCorrect(this.isFieldsEmpty()));
+            let passCorrect = this.isPasswordCorrect(this.isFieldsEmpty(), this.isLoginCorrect(this.isFieldsEmpty(), this.logInEmail.value, this.logAlert), this.logInPassword.value, this.logAlert);
             this.isSend(passCorrect);
         })
     }
@@ -179,3 +237,58 @@ class LogInForm extends BasicList {
 
 let logInForm = new LogInForm();
 logInForm.initComponents();
+
+class SignInForm extends LogInForm {
+    constructor() {
+        super();
+    }
+
+    isNameValid(val1, alertLoc) {
+        let regExp = /^[a-zA-Z]{3,16}$/;
+        let isValid = false;
+        val1 && (!regExp.test(this.signInName.value) ? this.getAlertMessage('Not correct name. The correct length of the name is from 3 to 16 letters', alertLoc) : isValid = true);
+        return isValid;
+    }
+
+    isPasswordConformity(passCorrect) {
+        let isValid = false;
+
+        if ((passCorrect === true) && (this.signInPassword.value === this.signInConfirmPassword.value)) {
+            isValid = true;
+        } else if ((passCorrect === true) && (this.signInPassword.value !== this.signInConfirmPassword.value)) {
+            this.getAlertMessage('entered passwords do not match', this.signAlert);
+        }
+        return isValid;
+    }
+
+    getNewUser(val) {
+        return val && {
+            email: this.signInEmail.value,
+            name: this.signInName.value,
+            password: this.signInPassword.value
+        }
+    }
+
+    isSendUser(passCorrect) {
+        const url = 'https://easycode-test-auth-server.herokuapp.com/signup';
+        if (this.getNewUser(passCorrect) != false) {
+            this.sendLogin(this.getNewUser(passCorrect), url);
+        }
+    }
+
+    initSignInForm() {
+        this.signInBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            let passCorrect = this.isPasswordCorrect(this.isFieldsEmpty(), this.isLoginCorrect(this.isNameValid(this.isFieldsEmpty(), this.signAlert), this.signInEmail.value, this.signAlert), this.signInPassword.value, this.signAlert);
+            this.isSendUser(this.isPasswordConformity(passCorrect));
+        })
+    }
+
+    initComponents() {
+        this.initSignInForm();
+        this.setLocation();
+    }
+}
+
+let signInForm = new SignInForm();
+signInForm.initComponents();
